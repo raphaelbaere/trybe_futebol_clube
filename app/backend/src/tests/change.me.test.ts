@@ -4,7 +4,8 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
+import Teams from '../database/models/TeamsModel';
+import { mockTeams, mockSingleTeam  } from '../mocks/Teams.mock';
 
 import { Response } from 'superagent';
 
@@ -12,34 +13,30 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+describe('Testes do model Teams', () => {
+   let chaiHttpResponse: Response;
 
-  // let chaiHttpResponse: Response;
+   before(async () => {
+     sinon
+       .stub(Teams, "findAll")
+      .resolves(mockTeams as Teams[]);
+   });
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
-
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
-
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
-
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+   it('Testa o findAllTeams', async () => {
+     const { body, status } = await chai
+       .request(app).get('/teams');
+      expect(status).to.be.equal(200);
+      expect(body).to.be.an('array');
+      expect(body).to.be.deep.equal(mockTeams);
   });
+
+  it('Testa o getTeamById', async () => {
+    const { body, status } = await chai
+    .request(app).get('/teams/1');
+    expect(status).to.be.equal(200);
+    expect(body).to.be.an('object');
+    expect(body).to.be.deep.equal(mockSingleTeam);
+  });
+
+  afterEach(sinon.restore);
 });
