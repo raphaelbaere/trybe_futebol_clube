@@ -23,6 +23,7 @@ export default class UsersService {
     if (!user) {
       return null;
     }
+
     return user.role;
   };
 

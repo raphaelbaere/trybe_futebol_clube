@@ -1,7 +1,7 @@
 import { JwtPayload, SignOptions } from 'jsonwebtoken';
 import jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = process.env || 'theCenterWontHold';
+const { JWT_SECRET } = process.env || 'baereSegredo';
 if (!JWT_SECRET) throw new Error('JWT_SECRET is not defined');
 
 const options: SignOptions = {
