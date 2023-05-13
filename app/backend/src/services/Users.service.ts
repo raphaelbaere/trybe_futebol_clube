@@ -18,6 +18,14 @@ export default class UsersService {
     return user.id;
   };
 
+  getUserRole = async (userId: string) => {
+    const user = await this.userModel.login(userId);
+    if (!user) {
+      return null;
+    }
+    return user.role;
+  };
+
   private static compareHash(password: string, hash: string) {
     return compareSync(password, hash);
   }
