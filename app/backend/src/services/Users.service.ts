@@ -11,7 +11,7 @@ export default class UsersService {
       return null;
     }
 
-    if (UsersService.compareHash(password, user.password)) {
+    if (!UsersService.compareHash(password, user.password)) {
       return null;
     }
 
