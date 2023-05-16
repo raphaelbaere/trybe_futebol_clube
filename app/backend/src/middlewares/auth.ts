@@ -5,8 +5,8 @@ interface RequestAuth extends Request {
   userId?: string,
 }
 
-const { JWT_SECRET } = process.env || 'baereSegredo';
-if (!JWT_SECRET) throw new Error('JWT_SECRET is not defined');
+const secret = process.env.JWT_SECRET || 'baereSegredo';
+if (!secret) throw new Error('JWT_SECRET is not defined');
 
 const auth = (req: RequestAuth, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
@@ -15,7 +15,7 @@ const auth = (req: RequestAuth, res: Response, next: NextFunction) => {
     return;
   }
   try {
-    const validatedToken = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
+    const validatedToken = jwt.verify(token, secret) as jwt.JwtPayload;
     req.userId = validatedToken.email;
     next();
   } catch (err) {

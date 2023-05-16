@@ -12,8 +12,8 @@ const validateLogin = (req: Request, res: Response, next: NextFunction) => {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
 
-  if (password.length < 6) {
-    return res.status(401).json({ message: 'Password must have more than 6 characters' });
+  if (password.length <= 6) {
+    return res.status(401).json({ message: 'Invalid email or password' });
   }
 
   next();
