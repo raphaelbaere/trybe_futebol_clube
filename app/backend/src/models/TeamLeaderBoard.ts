@@ -7,6 +7,8 @@ interface LeaderboardInterface {
   totalLosses: number;
   goalsFavor: number;
   goalsOwn: number;
+  goalsBalance: number;
+  efficiency: number;
 }
 
 export default class TeamLeaderboard implements LeaderboardInterface {
@@ -18,6 +20,8 @@ export default class TeamLeaderboard implements LeaderboardInterface {
   public totalVictories: number;
   public goalsFavor: number;
   public goalsOwn: number;
+  public goalsBalance: number;
+  public efficiency: number;
 
   constructor(teamName: string) {
     this.name = teamName;
@@ -28,5 +32,7 @@ export default class TeamLeaderboard implements LeaderboardInterface {
     this.totalVictories = 0;
     this.goalsFavor = 0;
     this.goalsOwn = 0;
+    this.goalsBalance = 0;
+    this.efficiency = 0;
   }
 }

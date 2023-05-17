@@ -22,11 +22,33 @@ export default class LeaderboardService {
     private _teamdb = new TeamsModel(),
   ) {}
 
+  handleGoalsBalanceDraw = (a: TeamLeaderboard, b: TeamLeaderboard) => b.goalsFavor - a.goalsFavor;
+
+  handleTotalVictoriesDraw = (a: TeamLeaderboard, b: TeamLeaderboard) => {
+    if (a.goalsBalance === b.goalsBalance) {
+      return this.handleGoalsBalanceDraw(a, b);
+    }
+    return b.goalsBalance - a.goalsBalance;
+  };
+
+  handleTotalPointsDraw = (a: TeamLeaderboard, b: TeamLeaderboard) => {
+    if (a.totalVictories === b.totalVictories) {
+      return this.handleTotalVictoriesDraw(a, b);
+    }
+    return b.totalVictories - a.totalVictories;
+  };
+
   getHomeLeaderboard = async () => {
     const teams = await this._teamdb.findAllTeams();
     const matches = await this._matchdb.getActiveMatches(false);
-    const HomeLeaderboard = teams.map((team) => this.getHomeInfo(team, matches));
-    return HomeLeaderboard;
+    const homeLeaderboard = teams.map((team) => this.getHomeInfo(team, matches));
+    const sortedHomeLeaderBoard = homeLeaderboard.sort((a, b) => {
+      if (a.totalPoints === b.totalPoints) {
+        return this.handleTotalPointsDraw(a, b);
+      }
+      return b.totalPoints - a.totalPoints;
+    });
+    return sortedHomeLeaderBoard;
   };
 
   calcPoints = (homeTeamGoals: number, awayTeamGoals: number) => {
@@ -63,6 +85,8 @@ export default class LeaderboardService {
         pointsObj.totalGames += 1;
         pointsObj.goalsFavor += m.homeTeamGoals;
         pointsObj.goalsOwn += m.awayTeamGoals;
+        pointsObj.goalsBalance = pointsObj.goalsFavor - pointsObj.goalsOwn;
+        pointsObj.efficiency = (pointsObj.totalPoints / (pointsObj.totalGames * 3)) * 100;
       });
     return pointsObj;
   };
